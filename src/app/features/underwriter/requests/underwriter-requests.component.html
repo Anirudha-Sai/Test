@@ -1,0 +1,53 @@
+<section class="page-header">
+  <div>
+    <span class="eyebrow">Underwriter</span>
+    <h1>Pending requests</h1>
+  </div>
+</section>
+
+<div *ngIf="isLoading" class="panel panel--compact">
+  <div class="loading-state">Loading underwriting requests...</div>
+</div>
+
+<div *ngIf="!isLoading && errorMessage" class="panel panel--compact">
+  <div class="error-state">{{ errorMessage }}</div>
+</div>
+
+<div *ngIf="!isLoading && !errorMessage" class="panel">
+  <div *ngIf="requests.length === 0" class="empty-state">
+    <p>No pending underwriting requests.</p>
+  </div>
+
+  <div *ngIf="requests.length > 0" class="table-wrapper">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Request ID</th>
+          <th>Property / Asset</th>
+          <th>Requested Coverage</th>
+          <th>Requested Premium</th>
+          <th>Requested Period</th>
+          <th>Status</th>
+          <th>Requested Date</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let request of requests; trackBy: trackRequest">
+          <td>#{{ request.id ?? request.quoteRequestId ?? '—' }}</td>
+          <td>{{ getTitle(request) }}</td>
+          <td>{{ request.requestedCoverage ?? '—' }}</td>
+          <td>{{ request.requestedPremium ?? '—' }}</td>
+          <td>{{ request.requestedPeriodYears ?? '—' }} yrs</td>
+          <td>
+            <span class="status-badge status-badge--{{ getStatusTone(request.status) }}">{{ getStatusLabel(request.status) }}</span>
+          </td>
+          <td>{{ request.requestedAt || request.createdAt || request.requestedDate || '—' }}</td>
+          <td>
+            <button type="button" class="secondary-button" [routerLink]="['/underwriter/requests', request.id ?? request.quoteRequestId]">View Request</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,83 @@
+<section class="page-header">
+  <div>
+    <span class="eyebrow">Underwriting request</span>
+    <h1>Create underwriting request</h1>
+  </div>
+  <button type="button" class="secondary-button" [routerLink]="['/agent/underwriting']">Back to requests</button>
+</section>
+
+<div *ngIf="isLoading" class="panel panel--compact">
+  <div class="loading-state">Loading asset details...</div>
+</div>
+
+<div *ngIf="errorMessage" class="panel panel--compact">
+  <div class="error-state">{{ errorMessage }}</div>
+</div>
+
+<div *ngIf="asset" class="panel" style="margin-bottom: 1.5rem;">
+  <div class="panel__header">
+    <h2>Asset summary</h2>
+  </div>
+
+  <ul class="detail-list">
+    <li><span>Asset Name</span><strong>{{ getAssetName() }}</strong></li>
+    <li><span>Asset Type</span><strong>{{ getAssetTypeLabel() }}</strong></li>
+    <li><span>Customer</span><strong>{{ customerName }}</strong></li>
+    <li><span>Market Value</span><strong>{{ asset.marketValue ?? '—' }}</strong></li>
+  </ul>
+</div>
+
+<form *ngIf="asset" [formGroup]="form" (ngSubmit)="submit()" class="stacked-form">
+  <div class="panel">
+    <div class="panel__header">
+      <h2>Request details</h2>
+    </div>
+
+    <div class="field-grid">
+      <div class="field-group">
+        <label for="requestedCoverage">Requested Coverage</label>
+        <input id="requestedCoverage" type="number" min="1" step="0.01" formControlName="requestedCoverage" />
+        <small class="error-text" *ngIf="form.controls.requestedCoverage.touched && form.controls.requestedCoverage.hasError('required')">Requested coverage is required.</small>
+        <small class="error-text" *ngIf="form.controls.requestedCoverage.touched && form.controls.requestedCoverage.hasError('min')">Requested coverage must be greater than zero.</small>
+      </div>
+
+      <div class="field-group">
+        <label for="requestedPremium">Requested Premium</label>
+        <input id="requestedPremium" type="number" min="0" step="0.01" formControlName="requestedPremium" />
+        <small class="error-text" *ngIf="form.controls.requestedPremium.touched && form.controls.requestedPremium.hasError('required')">Requested premium is required.</small>
+        <small class="error-text" *ngIf="form.controls.requestedPremium.touched && form.controls.requestedPremium.hasError('min')">Requested premium cannot be negative.</small>
+      </div>
+
+      <div class="field-group">
+        <label for="requestedPeriodYears">Requested Period (years)</label>
+        <input id="requestedPeriodYears" type="number" min="1" step="1" formControlName="requestedPeriodYears" />
+        <small class="error-text" *ngIf="form.controls.requestedPeriodYears.touched && form.controls.requestedPeriodYears.hasError('required')">Requested period is required.</small>
+        <small class="error-text" *ngIf="form.controls.requestedPeriodYears.touched && form.controls.requestedPeriodYears.hasError('min')">Requested period must be greater than zero.</small>
+      </div>
+
+      <div class="field-group field-group--full">
+        <label for="remarks">Remarks</label>
+        <textarea id="remarks" rows="4" formControlName="remarks" placeholder="Add underwriting context or special instructions..."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="inline-actions">
+    <button type="button" class="secondary-button" [routerLink]="['/agent/underwriting']">Cancel</button>
+    <button type="submit" class="primary-button" [disabled]="isSubmitting">
+      {{ isSubmitting ? 'Submitting...' : 'Submit Underwriting Request' }}
+    </button>
+  </div>
+</form>
+
+<div *ngIf="createdRequest" class="panel" style="margin-top: 1.5rem;">
+  <div class="panel__header">
+    <h2>Request submitted</h2>
+  </div>
+  <ul class="detail-list">
+    <li><span>Request ID</span><strong>{{ createdRequest.id ?? '—' }}</strong></li>
+    <li><span>Requested Coverage</span><strong>{{ createdRequest.requestedCoverage ?? '—' }}</strong></li>
+    <li><span>Requested Premium</span><strong>{{ createdRequest.requestedPremium ?? '—' }}</strong></li>
+    <li><span>Requested Period</span><strong>{{ createdRequest.requestedPeriodYears ?? '—' }}</strong></li>
+  </ul>
+</div>

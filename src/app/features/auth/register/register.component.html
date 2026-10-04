@@ -1,0 +1,62 @@
+<section class="auth-shell">
+  <div class="auth-card auth-card--wide">
+    <div class="auth-card__header">
+      <span class="eyebrow">New account</span>
+      <h1>Create your portal profile</h1>
+      <p>New registrations default to the User role. Privileged roles are assigned through admin-controlled workflows.</p>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      <div class="field-grid">
+        <div class="field-group">
+          <label for="fullName">Full name</label>
+          <input id="fullName" type="text" formControlName="fullName" placeholder="Jane Smith" />
+          <small class="error-text" *ngIf="form.controls.fullName.touched && form.controls.fullName.invalid">
+            Full name is required.
+          </small>
+        </div>
+
+        <div class="field-group">
+          <label for="email">Email</label>
+          <input id="email" type="email" formControlName="email" placeholder="jane@example.com" />
+          <small class="error-text" *ngIf="form.controls.email.touched && form.controls.email.invalid">
+            Enter a valid email address.
+          </small>
+        </div>
+
+        <div class="field-group">
+          <label for="password">Password</label>
+          <input id="password" type="password" formControlName="password" placeholder="Minimum 6 characters" />
+          <small class="error-text" *ngIf="form.controls.password.touched && form.controls.password.invalid">
+            Password must be at least 6 characters.
+          </small>
+        </div>
+
+        <div class="field-group">
+          <label for="confirmPassword">Confirm password</label>
+          <input id="confirmPassword" type="password" formControlName="confirmPassword" placeholder="Repeat your password" />
+          <small class="error-text" *ngIf="form.controls.confirmPassword.touched && form.controls.confirmPassword.invalid || form.errors?.['passwordMismatch']">
+            Passwords do not match.
+          </small>
+        </div>
+      </div>
+
+      <div class="alert alert--error" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+      <div class="alert alert--success" *ngIf="successMessage">
+        {{ successMessage }}
+      </div>
+
+      <button type="submit" class="primary-button" [disabled]="submitting">
+        {{ submitting ? 'Creating account...' : 'Create account' }}
+      </button>
+    </form>
+
+    <div class="auth-card__footer">
+      <span>Already have an account?</span>
+      <a routerLink="/login">Sign in</a>
+    </div>
+  </div>
+</section>

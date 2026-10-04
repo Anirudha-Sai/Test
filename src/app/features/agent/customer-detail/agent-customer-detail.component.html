@@ -1,0 +1,63 @@
+<section class="page-header">
+  <div>
+    <span class="eyebrow">Customer record</span>
+    <h1>{{ userDisplayName }}</h1>
+  </div>
+  <div class="inline-actions">
+    <button type="button" class="secondary-button" [routerLink]="['/agent/customers']">Back to customers</button>
+  </div>
+</section>
+
+<div *ngIf="isLoading" class="panel panel--compact">
+  <div class="loading-state">Loading customer details...</div>
+</div>
+
+<div *ngIf="!isLoading && errorMessage" class="panel panel--compact">
+  <div class="error-state">{{ errorMessage }}</div>
+</div>
+
+<div *ngIf="!isLoading && customer" class="content-grid">
+  <div class="panel">
+    <div class="panel__header">
+      <h2>Customer information</h2>
+    </div>
+
+    <ul class="detail-list">
+      <li><span>Customer ID</span><strong>{{ customer.customerId ?? '—' }}</strong></li>
+      <li><span>User ID</span><strong>{{ customer.user?.userId ?? '—' }}</strong></li>
+      <li><span>Customer Since</span><strong>{{ customer.customerSince || customer.createdAt || '—' }}</strong></li>
+      <li><span>Number of Policies</span><strong>{{ customer.numberOfPolicies ?? customer.policyCount ?? 0 }}</strong></li>
+      <li><span>Number of Properties</span><strong>{{ customer.numberOfProperties ?? customer.propertyCount ?? 0 }}</strong></li>
+    </ul>
+  </div>
+
+  <div class="panel">
+    <div class="panel__header">
+      <h2>Assets</h2>
+    </div>
+
+    <div class="stacked-actions">
+      <button type="button" class="primary-button" (click)="openNewAsset()">Add Asset</button>
+      <button type="button" class="secondary-button" (click)="openCustomerAssets()">View Assets</button>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="!isLoading && customer" class="panel" style="margin-top: 1.5rem;">
+  <div class="panel__header">
+    <h2>Asset summary</h2>
+  </div>
+
+  <div *ngIf="customerAssets.length === 0" class="empty-state">
+    <p>No assets have been recorded for this customer yet.</p>
+  </div>
+
+  @for (asset of customerAssets; track asset.assetId) {
+    <li>
+        <span>{{ asset.name ?? asset.assetName ?? 'Asset' }}</span>
+        <button type="button" class="secondary-button" [routerLink]="['/agent/assets', asset.assetId]">Open</button>
+    </li>
+    } @empty {
+    <li>No assets found.</li>
+    }
+</div>

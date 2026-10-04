@@ -1,0 +1,80 @@
+<section class="page-header">
+  <div>
+    <span class="eyebrow">Asset details</span>
+    <h1>{{ getAssetName() }}</h1>
+  </div>
+  <div class="inline-actions">
+    <button type="button" class="secondary-button" [routerLink]="['/agent/customers']">Back to customers</button>
+  </div>
+</section>
+
+<div *ngIf="isLoading" class="panel panel--compact">
+  <div class="loading-state">Loading asset details...</div>
+</div>
+
+<div *ngIf="!isLoading && errorMessage" class="panel panel--compact">
+  <div class="error-state">{{ errorMessage }}</div>
+</div>
+
+<div *ngIf="!isLoading && asset" class="content-grid">
+  <div class="panel">
+    <div class="panel__header">
+      <h2>General asset information</h2>
+    </div>
+
+    <ul class="detail-list">
+      <li><span>Asset Type</span><strong>{{ getAssetTypeLabel() }}</strong></li>
+      <li><span>Asset Name</span><strong>{{ getAssetName() }}</strong></li>
+      <li><span>Market Value</span><strong>{{ asset.marketValue ?? '—' }}</strong></li>
+      <li><span>Replacement Value</span><strong>{{ asset.replacementValue ?? '—' }}</strong></li>
+      <li><span>Created At</span><strong>{{ asset.createdAt || '—' }}</strong></li>
+      <li><span>Updated At</span><strong>{{ asset.updatedAt || '—' }}</strong></li>
+      <li><span>Status</span><strong>{{ asset.status || 'Active' }}</strong></li>
+    </ul>
+  </div>
+
+  <div class="panel">
+    <div class="panel__header">
+      <h2>Actions</h2>
+    </div>
+
+    <div class="stacked-actions">
+      <button type="button" class="primary-button" (click)="editAsset()">Edit Asset</button>
+      <button type="button" class="secondary-button" (click)="deleteAsset()">Delete Asset</button>
+      <button type="button" class="secondary-button" (click)="openUnderwritingRequest()">Create Underwriting Request</button>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="!isLoading && asset && getPropertyDetails()" class="panel" style="margin-top: 1.5rem;">
+  <div class="panel__header">
+    <h2>Property detail</h2>
+  </div>
+
+  <ul class="detail-list">
+    <li><span>Property Type</span><strong>{{ getPropertyEntry('propertyType') ?? '—' }}</strong></li>
+    <li><span>Address</span><strong>{{ getPropertyEntry('addressLine1') ?? '—' }}</strong></li>
+    <li><span>City</span><strong>{{ getPropertyEntry('city') ?? '—' }}</strong></li>
+    <li><span>State</span><strong>{{ getPropertyEntry('state') ?? '—' }}</strong></li>
+    <li><span>Country</span><strong>{{ getPropertyEntry('country') ?? '—' }}</strong></li>
+    <li><span>Postal Code</span><strong>{{ getPropertyEntry('postalCode') ?? getPropertyEntry('zipCode') ?? '—' }}</strong></li>
+    <li><span>Year Built</span><strong>{{ getPropertyEntry('yearBuilt') ?? '—' }}</strong></li>
+    <li><span>Building Area</span><strong>{{ getPropertyEntry('buildingArea') ?? getPropertyEntry('squareFootage') ?? '—' }}</strong></li>
+  </ul>
+</div>
+
+<div *ngIf="!isLoading && asset && getVehicleDetails()" class="panel" style="margin-top: 1.5rem;">
+  <div class="panel__header">
+    <h2>Vehicle detail</h2>
+  </div>
+
+  <ul class="detail-list">
+    <li><span>Registration Number</span><strong>{{ getVehicleEntry('registrationNumber') ?? '—' }}</strong></li>
+    <li><span>Make</span><strong>{{ getVehicleEntry('make') ?? '—' }}</strong></li>
+    <li><span>Model</span><strong>{{ getVehicleEntry('model') ?? '—' }}</strong></li>
+    <li><span>Manufacture Year</span><strong>{{ getVehicleEntry('manufactureYear') ?? getVehicleEntry('year') ?? '—' }}</strong></li>
+    <li><span>Vehicle Type</span><strong>{{ getVehicleEntry('vehicleType') ?? '—' }}</strong></li>
+    <li><span>Engine Number</span><strong>{{ getVehicleEntry('engineNumber') ?? '—' }}</strong></li>
+    <li><span>Chassis Number</span><strong>{{ getVehicleEntry('chassisNumber') ?? '—' }}</strong></li>
+  </ul>
+</div>

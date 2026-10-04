@@ -1,0 +1,47 @@
+<section class="page-header">
+  <div>
+    <span class="eyebrow">Policies</span>
+    <h1>My policies</h1>
+  </div>
+</section>
+
+<div *ngIf="isLoading" class="panel panel--compact">
+  <div class="loading-state">Loading policies...</div>
+</div>
+
+<div *ngIf="!isLoading && errorMessage" class="panel panel--compact">
+  <div class="error-state">{{ errorMessage }}</div>
+</div>
+
+<div *ngIf="!isLoading && !errorMessage" class="panel">
+  <div *ngIf="policies.length === 0" class="empty-state">
+    <p>No policies have been created yet.</p>
+  </div>
+
+  <div *ngIf="policies.length > 0" class="table-wrapper">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Policy</th>
+          <th>Status</th>
+          <th>Premium</th>
+          <th>Effective Date</th>
+          <th>Expiry Date</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let policy of policies">
+          <td>{{ policy.policyNumber ?? policy.id ?? '—' }}</td>
+          <td>{{ policy.status ?? '—' }}</td>
+          <td>{{ policy.premium ?? policy.annualPremium ?? '—' }}</td>
+          <td>{{ policy.effectiveDate ?? policy.startDate ?? '—' }}</td>
+          <td>{{ policy.expiryDate ?? policy.endDate ?? '—' }}</td>
+          <td>
+            <button type="button" class="secondary-button" [routerLink]="['/customer/policies', policy.policyNumber ?? policy.id]">View</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

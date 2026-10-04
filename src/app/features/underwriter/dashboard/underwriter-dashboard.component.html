@@ -1,0 +1,63 @@
+<section class="page-header">
+  <div>
+    <span class="eyebrow">Underwriting</span>
+    <h1>Underwriter dashboard</h1>
+  </div>
+</section>
+
+<div *ngIf="isLoading" class="panel panel--compact">
+  <div class="loading-state">Loading underwriting dashboard...</div>
+</div>
+
+<div *ngIf="!isLoading && errorMessage" class="panel panel--compact">
+  <div class="error-state">{{ errorMessage }}</div>
+</div>
+
+<div *ngIf="!isLoading && !errorMessage" class="stats-grid stats-grid--wide">
+  <article class="metric-card" *ngFor="let stat of stats">
+    <span class="metric-card__label">{{ stat.label }}</span>
+    <strong class="metric-card__value metric-card__value--{{ stat.tone }}">{{ stat.value }}</strong>
+  </article>
+</div>
+
+<div *ngIf="!isLoading && !errorMessage" class="content-grid">
+  <section class="panel">
+    <div class="panel__header">
+      <h2>Recent requests</h2>
+    </div>
+
+    <div *ngIf="recentRequests.length === 0" class="empty-state">
+      <p>No underwriting requests are currently available.</p>
+    </div>
+
+    <ul *ngIf="recentRequests.length > 0" class="activity-list">
+      <li *ngFor="let request of recentRequests">
+        <div>
+          <strong>#{{ request.id ?? request.quoteRequestId ?? '—' }}</strong>
+          <div>{{ request.requestedCoverage ?? request.requestedPremium ?? '—' }}</div>
+        </div>
+        <button type="button" class="secondary-button" [routerLink]="['/underwriter/requests', request.id ?? request.quoteRequestId]">View</button>
+      </li>
+    </ul>
+  </section>
+
+  <aside class="panel panel--compact">
+    <div class="panel__header">
+      <h2>Recent quotes</h2>
+    </div>
+
+    <div *ngIf="recentQuotes.length === 0" class="empty-state">
+      <p>No generated quotes are available yet.</p>
+    </div>
+
+    <ul *ngIf="recentQuotes.length > 0" class="activity-list">
+      <li *ngFor="let quote of recentQuotes">
+        <div>
+          <strong>{{ quote.referenceNumber ?? quote.quoteReference ?? quote.id ?? 'Quote' }}</strong>
+          <div>{{ quote.coverageType || 'Coverage' }} · {{ quote.annualPremium ?? quote.premium ?? '—' }}</div>
+        </div>
+        <button type="button" class="secondary-button" [routerLink]="['/underwriter/quotes', quote.id]">View</button>
+      </li>
+    </ul>
+  </aside>
+</div>

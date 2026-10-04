@@ -1,0 +1,48 @@
+<section class="page-header">
+  <div>
+    <span class="eyebrow">Compare quotes</span>
+    <h1>Quotation options</h1>
+  </div>
+  <div class="inline-actions">
+    <button type="button" class="secondary-button" [routerLink]="['/customer/quotes', request?.id ?? request?.quoteRequestId]">Back to request</button>
+  </div>
+</section>
+
+<div *ngIf="isLoading" class="panel panel--compact">
+  <div class="loading-state">Loading quotation comparison...</div>
+</div>
+
+<div *ngIf="!isLoading && errorMessage" class="panel panel--compact">
+  <div class="error-state">{{ errorMessage }}</div>
+</div>
+
+<div *ngIf="!isLoading && !errorMessage" class="quote-comparison-grid">
+  <article *ngFor="let quote of quotes; let index = index" class="quote-compare-card">
+    <div class="quote-card__header">
+      <h3>Quote {{ index + 1 }}</h3>
+      <span class="status-badge status-badge--{{ getStatusTone(quote.status) }}">{{ getStatusLabel(quote.status) }}</span>
+    </div>
+
+    <div class="compare-field"><span>Reference</span><strong>{{ quote.referenceNumber ?? quote.quoteReference ?? quote.id ?? '—' }}</strong></div>
+    <div class="compare-field"><span>Coverage</span><strong>{{ quote.coverageType ?? '—' }}</strong></div>
+    <div class="compare-field"><span>Coverage Percentage</span><strong>{{ quote.coveragePercentage ?? '—' }}%</strong></div>
+    <div class="compare-field"><span>Sum Insured</span><strong>{{ quote.sumInsured ?? '—' }}</strong></div>
+    <div class="compare-field"><span>Annual Premium</span><strong>{{ quote.annualPremium ?? quote.premium ?? '—' }}</strong></div>
+    <div class="compare-field"><span>Coverage Period</span><strong>{{ quote.coveragePeriodYears ?? '—' }} years</strong></div>
+    <div class="compare-field"><span>Renewal Period</span><strong>{{ quote.renewalPeriodMonths ?? '—' }} months</strong></div>
+    <div class="compare-field"><span>Deductible</span><strong>{{ quote.deductiblePercentage ?? '—' }}%</strong></div>
+    <div class="compare-field"><span>Risk Category</span><strong>{{ quote.riskCategory ?? '—' }}</strong></div>
+    <div class="compare-field"><span>Valid Until</span><strong>{{ quote.validUntil || '—' }}</strong></div>
+
+    <div class="stacked-actions">
+      <button *ngIf="canSelectQuote(quote)" type="button" class="primary-button" (click)="selectQuote(quote)">Select</button>
+      <button *ngIf="!canSelectQuote(quote)" type="button" class="secondary-button" disabled>{{ getStatusLabel(quote.status) }}</button>
+    </div>
+  </article>
+</div>
+
+<div *ngIf="!isLoading && quotes.length === 0" class="panel">
+  <div class="empty-state">
+    <p>No quotations are currently available for this request.</p>
+  </div>
+</div>

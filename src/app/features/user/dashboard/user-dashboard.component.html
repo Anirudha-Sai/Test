@@ -1,0 +1,43 @@
+<section class="page-header">
+  <div>
+    <span class="eyebrow">Overview</span>
+    <h1>Welcome to your insurance portal</h1>
+  </div>
+  <button type="button" class="primary-button">Explore products</button>
+</section>
+
+<div class="stats-grid">
+  <article class="metric-card" *ngFor="let stat of overviewStats">
+    <span class="metric-card__label">{{ stat.label }}</span>
+    <strong class="metric-card__value metric-card__value--{{ stat.tone }}">{{ stat.value }}</strong>
+  </article>
+</div>
+
+<div class="content-grid">
+  <section class="panel">
+    <div class="panel__header">
+      <h2>Explore insurance products</h2>
+    </div>
+    <div class="product-list">
+      <article class="info-card" *ngFor="let product of products">
+        <div class="info-card__icon">🛡️</div>
+        <div>
+          <h3>{{ product.name }}</h3>
+          <p>{{ product.description }}</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <aside class="panel panel--compact">
+    <div class="panel__header">
+      <h2>Account profile</h2>
+    </div>
+    <ul class="detail-list">
+      <li *ngFor="let item of profileDetails">
+        <span>{{ item.label }}</span>
+        <strong>{{ item.value }}</strong>
+      </li>
+    </ul>
+  </aside>
+</div>

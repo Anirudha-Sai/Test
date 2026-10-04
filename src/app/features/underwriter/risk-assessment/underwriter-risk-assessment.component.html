@@ -1,0 +1,189 @@
+<section class="page-header">
+  <div>
+    <span class="eyebrow">Risk assessment</span>
+    <h1>Underwriting risk review</h1>
+  </div>
+  <div class="inline-actions">
+    <button type="button" class="secondary-button" [routerLink]="['/underwriter/requests']">Back to requests</button>
+  </div>
+</section>
+
+<div *ngIf="isLoading" class="panel panel--compact">
+  <div class="loading-state">Loading request details...</div>
+</div>
+
+<div *ngIf="!isLoading && errorMessage" class="panel panel--compact">
+  <div class="error-state">{{ errorMessage }}</div>
+</div>
+
+<div *ngIf="!isLoading && request" class="content-grid">
+  <section class="panel">
+    <div class="panel__header">
+      <h2>Request summary</h2>
+    </div>
+
+    <ul class="detail-list">
+      <li><span>Request ID</span><strong>#{{ request.id ?? request.quoteRequestId ?? '—' }}</strong></li>
+      <li><span>Property ID</span><strong>{{ request.propertyId ?? '—' }}</strong></li>
+      <li><span>Requested Premium</span><strong>{{ request.requestedPremium ?? '—' }}</strong></li>
+      <li><span>Requested Coverage</span><strong>{{ request.requestedCoverage ?? '—' }}</strong></li>
+    </ul>
+  </section>
+
+  <aside class="panel">
+    <div class="panel__header">
+      <h2>Workflow</h2>
+    </div>
+
+    <div class="stacked-actions">
+      <button type="button" class="secondary-button" (click)="viewRequest()">Request details</button>
+      <button type="button" class="secondary-button" (click)="viewQuotes()">Generated quotes</button>
+    </div>
+  </aside>
+</div>
+
+<form *ngIf="!isLoading && request" [formGroup]="form" (ngSubmit)="submit()" class="stacked-form">
+  <div class="panel">
+    <div class="panel__header">
+      <h2>Section 1 — Property</h2>
+    </div>
+
+    <div class="field-grid">
+      <div class="field-group">
+        <label for="propertyValue">Property Value</label>
+        <input id="propertyValue" type="number" min="0.01" step="0.01" formControlName="propertyValue" />
+        <small class="error-text" *ngIf="form.controls.propertyValue.touched && form.controls.propertyValue.hasError('required')">Property value is required.</small>
+        <small class="error-text" *ngIf="form.controls.propertyValue.touched && form.controls.propertyValue.hasError('min')">Property value must be greater than 0.</small>
+      </div>
+
+      <div class="field-group">
+        <label for="buildingAge">Building Age</label>
+        <input id="buildingAge" type="number" min="0" step="1" formControlName="buildingAge" />
+        <small class="error-text" *ngIf="form.controls.buildingAge.touched && form.controls.buildingAge.hasError('min')">Building age cannot be negative.</small>
+      </div>
+
+      <div class="field-group">
+        <label for="floors">Floors</label>
+        <input id="floors" type="number" min="1" step="1" formControlName="floors" />
+        <small class="error-text" *ngIf="form.controls.floors.touched && form.controls.floors.hasError('min')">Floors must be greater than 0.</small>
+      </div>
+
+      <div class="field-group">
+        <label for="constructionType">Construction Type</label>
+        <select id="constructionType" formControlName="constructionType">
+          <option *ngFor="let option of constructionTypeOptions" [ngValue]="option.value">{{ option.label }}</option>
+        </select>
+      </div>
+
+      <div class="field-group">
+        <label for="usage">Usage</label>
+        <input id="usage" type="text" formControlName="usage" />
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel__header">
+      <h2>Section 2 — Earthquake / Hazard</h2>
+    </div>
+
+    <div class="field-grid">
+      <div class="field-group">
+        <label for="historicalEarthquakes">Historical Earthquakes</label>
+        <input id="historicalEarthquakes" type="number" min="0" step="1" formControlName="historicalEarthquakes" />
+      </div>
+
+      <div class="field-group">
+        <label for="maxMagnitude">Maximum Magnitude</label>
+        <input id="maxMagnitude" type="number" min="0" step="0.1" formControlName="maxMagnitude" />
+        <small class="error-text" *ngIf="form.controls.maxMagnitude.touched && form.controls.maxMagnitude.hasError('min')">Maximum magnitude cannot be negative.</small>
+      </div>
+
+      <div class="field-group">
+        <label for="distanceFromFaultKm">Distance From Fault (km)</label>
+        <input id="distanceFromFaultKm" type="number" min="0" step="0.1" formControlName="distanceFromFaultKm" />
+        <small class="error-text" *ngIf="form.controls.distanceFromFaultKm.touched && form.controls.distanceFromFaultKm.hasError('min')">Distance from fault cannot be negative.</small>
+      </div>
+
+      <div class="field-group">
+        <label for="seismicZone">Seismic Zone</label>
+        <input id="seismicZone" type="text" formControlName="seismicZone" />
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel__header">
+      <h2>Section 3 — Claims and Coverage</h2>
+    </div>
+
+    <div class="field-grid">
+      <div class="field-group">
+        <label for="previousClaims">Previous Claims</label>
+        <input id="previousClaims" type="number" min="0" step="1" formControlName="previousClaims" />
+      </div>
+
+      <div class="field-group checkbox-field">
+        <label>
+          <input type="checkbox" formControlName="contentsCoverage" />
+          Contents Coverage
+        </label>
+      </div>
+
+      <div class="field-group checkbox-field">
+        <label>
+          <input type="checkbox" formControlName="temporaryAccommodation" />
+          Temporary Accommodation
+        </label>
+      </div>
+
+      <div class="field-group checkbox-field">
+        <label>
+          <input type="checkbox" formControlName="vehicleCoverage" />
+          Vehicle Coverage
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div class="inline-actions">
+    <button type="button" class="secondary-button" [routerLink]="['/underwriter/requests', request.id ?? request.quoteRequestId]">Back to request</button>
+    <button type="submit" class="primary-button" [disabled]="isSubmitting">
+      {{ isSubmitting ? 'Generating...' : 'Generate risk assessment' }}
+    </button>
+  </div>
+</form>
+
+<div *ngIf="result" class="panel" style="margin-top: 1.5rem;">
+  <div class="panel__header">
+    <h2>Risk assessment result</h2>
+  </div>
+
+  <div class="risk-grid">
+    <article class="metric-card">
+      <span class="metric-card__label">Hazard Score</span>
+      <strong class="metric-card__value">{{ result.hazardScore ?? '—' }}</strong>
+    </article>
+    <article class="metric-card">
+      <span class="metric-card__label">Vulnerability Score</span>
+      <strong class="metric-card__value">{{ result.vulnerabilityScore ?? '—' }}</strong>
+    </article>
+    <article class="metric-card">
+      <span class="metric-card__label">Exposure Score</span>
+      <strong class="metric-card__value">{{ result.exposureScore ?? '—' }}</strong>
+    </article>
+    <article class="metric-card">
+      <span class="metric-card__label">Actuarial Risk Index</span>
+      <strong class="metric-card__value">{{ result.actuarialRiskIndex ?? '—' }}</strong>
+    </article>
+  </div>
+
+  <div class="result-summary">
+    <div><strong>Risk Category:</strong> {{ result.riskCategory || '—' }}</div>
+    <div><strong>Coverage Percentage:</strong> {{ result.coveragePercentage ?? '—' }}%</div>
+    <div><strong>Sum Insured:</strong> {{ result.sumInsured ?? '—' }}</div>
+    <div><strong>Premium Rate:</strong> {{ result.premiumRate ?? '—' }}</div>
+    <div><strong>Annual Premium:</strong> {{ result.annualPremium ?? '—' }}</div>
+    <div><strong>Deductible Percentage:</strong> {{ result.deductiblePercentage ?? '—' }}%</div>
+  </div>
+</div>

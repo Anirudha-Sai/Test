@@ -1,0 +1,203 @@
+<section class="page-header">
+  <div>
+    <span class="eyebrow">Asset workflow</span>
+    <h1>{{ title }}</h1>
+  </div>
+  <button type="button" class="secondary-button" [routerLink]="[cancelRoute]">Cancel</button>
+</section>
+
+<form [formGroup]="form" (ngSubmit)="submit()" class="stacked-form">
+  <div class="panel">
+    <div class="panel__header">
+      <h2>Asset information</h2>
+    </div>
+
+    <div class="field-grid">
+      <div class="field-group">
+        <label for="assetType">Asset Type</label>
+        <select id="assetType" formControlName="assetType" (change)="onAssetTypeChange()">
+          <option *ngFor="let option of assetTypeOptions" [ngValue]="option.value">{{ option.label }}</option>
+        </select>
+        <small class="error-text" *ngIf="form.controls.assetType.touched && form.controls.assetType.hasError('required')">Asset type is required.</small>
+      </div>
+
+      <div class="field-group">
+        <label for="assetName">Asset Name</label>
+        <input id="assetName" type="text" formControlName="assetName" />
+        <small class="error-text" *ngIf="form.controls.assetName.touched && form.controls.assetName.hasError('required')">Asset name is required.</small>
+      </div>
+
+      <div class="field-group">
+        <label for="marketValue">Market Value</label>
+        <input id="marketValue" type="number" min="0" step="0.01" formControlName="marketValue" />
+        <small class="error-text" *ngIf="form.controls.marketValue.touched && form.controls.marketValue.hasError('required')">Market value is required.</small>
+      </div>
+
+      <div class="field-group">
+        <label for="replacementValue">Replacement Value</label>
+        <input id="replacementValue" type="number" min="0" step="0.01" formControlName="replacementValue" />
+        <small class="error-text" *ngIf="form.controls.replacementValue.touched && form.controls.replacementValue.hasError('required')">Replacement value is required.</small>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="showPropertyFields" class="panel" formGroupName="propertyDetails">
+    <div class="panel__header">
+      <h2>Property details</h2>
+    </div>
+
+    <div class="field-grid">
+      <div class="field-group">
+        <label for="propertyType">Property Type</label>
+        <input id="propertyType" type="text" formControlName="propertyType" />
+      </div>
+
+      <div class="field-group">
+        <label for="addressLine1">Address Line 1</label>
+        <input id="addressLine1" type="text" formControlName="addressLine1" />
+      </div>
+
+      <div class="field-group">
+        <label for="addressLine2">Address Line 2</label>
+        <input id="addressLine2" type="text" formControlName="addressLine2" />
+      </div>
+
+      <div class="field-group">
+        <label for="city">City</label>
+        <input id="city" type="text" formControlName="city" />
+      </div>
+
+      <div class="field-group">
+        <label for="state">State</label>
+        <input id="state" type="text" formControlName="state" />
+      </div>
+
+      <div class="field-group">
+        <label for="country">Country</label>
+        <input id="country" type="text" formControlName="country" />
+      </div>
+
+      <div class="field-group">
+        <label for="postalCode">Postal Code</label>
+        <input id="postalCode" type="text" formControlName="postalCode" />
+      </div>
+
+      <div class="field-group">
+        <label for="latitude">Latitude</label>
+        <input id="latitude" type="number" step="0.000001" formControlName="latitude" />
+      </div>
+
+      <div class="field-group">
+        <label for="longitude">Longitude</label>
+        <input id="longitude" type="number" step="0.000001" formControlName="longitude" />
+      </div>
+
+      <div class="field-group">
+        <label for="yearBuilt">Year Built</label>
+        <input id="yearBuilt" type="number" min="1900" formControlName="yearBuilt" />
+      </div>
+
+      <div class="field-group">
+        <label for="buildingArea">Building Area (sq ft)</label>
+        <input id="buildingArea" type="number" min="0" formControlName="buildingArea" />
+      </div>
+
+      <div class="field-group">
+        <label for="numberOfFloors">Number of Floors</label>
+        <input id="numberOfFloors" type="number" min="1" formControlName="numberOfFloors" />
+      </div>
+
+      <div class="field-group">
+        <label for="constructionType">Construction Type</label>
+        <select id="constructionType" formControlName="constructionType">
+          <option *ngFor="let option of constructionTypeOptions" [ngValue]="option.value">{{ option.label }}</option>
+        </select>
+      </div>
+
+      <div class="field-group">
+        <label for="occupancyType">Occupancy Type</label>
+        <select id="occupancyType" formControlName="occupancyType">
+          <option *ngFor="let option of occupancyTypeOptions" [ngValue]="option.value">{{ option.label }}</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="showVehicleFields" class="panel" formGroupName="vehicleDetails">
+    <div class="panel__header">
+      <h2>Vehicle details</h2>
+    </div>
+
+    <div class="field-grid">
+      <div class="field-group">
+        <label for="registrationNumber">Registration Number</label>
+        <input id="registrationNumber" type="text" formControlName="registrationNumber" />
+      </div>
+
+      <div class="field-group">
+        <label for="make">Make</label>
+        <input id="make" type="text" formControlName="make" />
+      </div>
+
+      <div class="field-group">
+        <label for="model">Model</label>
+        <input id="model" type="text" formControlName="model" />
+      </div>
+
+      <div class="field-group">
+        <label for="manufactureYear">Manufacture Year</label>
+        <input id="manufactureYear" type="number" min="1900" formControlName="manufactureYear" />
+      </div>
+
+      <div class="field-group">
+        <label for="vehicleType">Vehicle Type</label>
+        <input id="vehicleType" type="text" formControlName="vehicleType" />
+      </div>
+
+      <div class="field-group">
+        <label for="engineNumber">Engine Number</label>
+        <input id="engineNumber" type="text" formControlName="engineNumber" />
+      </div>
+
+      <div class="field-group">
+        <label for="chassisNumber">Chassis Number</label>
+        <input id="chassisNumber" type="text" formControlName="chassisNumber" />
+      </div>
+
+      <div class="field-group">
+        <label for="insuredDeclaredValue">Insured Declared Value</label>
+        <input id="insuredDeclaredValue" type="number" min="0" step="0.01" formControlName="insuredDeclaredValue" />
+      </div>
+
+      <div class="field-group">
+        <label for="seatingCapacity">Seating Capacity</label>
+        <input id="seatingCapacity" type="number" min="1" formControlName="seatingCapacity" />
+      </div>
+
+      <div class="field-group">
+        <label for="mileage">Mileage</label>
+        <input id="mileage" type="number" min="0" formControlName="mileage" />
+      </div>
+
+      <div class="field-group">
+        <label for="financed">Financed</label>
+        <select id="financed" formControlName="financed">
+          <option [ngValue]="false">No</option>
+          <option [ngValue]="true">Yes</option>
+        </select>
+      </div>
+
+      <div *ngIf="hasFinancierName" class="field-group">
+        <label for="financierName">Financier Name</label>
+        <input id="financierName" type="text" formControlName="financierName" />
+      </div>
+    </div>
+  </div>
+
+  <div class="inline-actions">
+    <button type="button" class="secondary-button" [routerLink]="[cancelRoute]">Cancel</button>
+    <button type="submit" class="primary-button" [disabled]="isSubmitting">
+      {{ isSubmitting ? 'Saving...' : (mode === 'edit' ? 'Save changes' : 'Create asset') }}
+    </button>
+  </div>
+</form>

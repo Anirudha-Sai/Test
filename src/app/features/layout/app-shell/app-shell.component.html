@@ -1,0 +1,50 @@
+<div class="app-shell">
+  <header class="topbar">
+    <div class="topbar__left">
+      <button class="icon-button mobile-only" type="button" (click)="toggleSidebar()" aria-label="Toggle menu">
+        ☰
+      </button>
+      <div class="brand">
+        <span class="brand__mark">I</span>
+        <div>
+          <strong>Insurance Hub</strong>
+          <small>{{ role }} portal</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="topbar__right">
+      <div class="user-chip">
+        <span class="user-chip__avatar">{{ currentUser?.fullName?.charAt(0)?.toUpperCase() ?? 'U' }}</span>
+        <div>
+          <strong>{{ currentUser?.fullName ?? 'User' }}</strong>
+          <small>{{ currentUser?.email ?? 'No email' }}</small>
+        </div>
+      </div>
+      <button type="button" class="secondary-button" (click)="logout()">Logout</button>
+    </div>
+  </header>
+
+  <div class="shell-body">
+    <aside class="sidebar" [class.sidebar--collapsed]="sidebarCollapsed">
+      <nav class="sidebar__nav" aria-label="Primary navigation">
+        <a
+          *ngFor="let item of navItems"
+          [routerLink]="item.route"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: false }"
+          class="nav-item"
+        >
+          <span class="nav-item__icon">{{ item.icon }}</span>
+          <span class="nav-item__label">{{ item.label }}</span>
+        </a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+
+  <app-toast-container></app-toast-container>
+</div>

@@ -1,0 +1,109 @@
+<section class="page-header">
+  <div>
+    <span class="eyebrow">Quote detail</span>
+    <h1>{{ quote?.referenceNumber ?? quote?.quoteReference ?? quote?.id ?? 'Quotation' }}</h1>
+  </div>
+  <div class="inline-actions">
+    <button type="button" class="secondary-button" [routerLink]="['/underwriter/quotes']">Back to quotes</button>
+  </div>
+</section>
+
+<div *ngIf="isLoading" class="panel panel--compact">
+  <div class="loading-state">Loading quote details...</div>
+</div>
+
+<div *ngIf="!isLoading && errorMessage" class="panel panel--compact">
+  <div class="error-state">{{ errorMessage }}</div>
+</div>
+
+<div *ngIf="!isLoading && quote" class="content-grid">
+  <section class="panel">
+    <div class="panel__header">
+      <h2>Quote information</h2>
+    </div>
+
+    <ul class="detail-list">
+      <li><span>Quote Reference Number</span><strong>{{ quote.referenceNumber ?? quote.quoteReference ?? quote.id ?? '—' }}</strong></li>
+      <li><span>Status</span><strong><span class="status-badge status-badge--{{ getStatusTone(quote.status) }}">{{ getStatusLabel(quote.status) }}</span></strong></li>
+      <li><span>Created At</span><strong>{{ quote.createdAt || '—' }}</strong></li>
+      <li><span>Valid Until</span><strong>{{ quote.validUntil || '—' }}</strong></li>
+      <li><span>Request ID</span><strong>#{{ quote.quoteRequestId ?? quote.requestId ?? '—' }}</strong></li>
+    </ul>
+  </section>
+
+  <aside class="panel">
+    <div class="panel__header">
+      <h2>Actions</h2>
+    </div>
+
+    <div class="stacked-actions">
+      <button *ngIf="canApproveOrReject()" type="button" class="primary-button" (click)="approveQuote()">Approve</button>
+      <button *ngIf="canApproveOrReject()" type="button" class="secondary-button" (click)="rejectQuote()">Reject</button>
+    </div>
+  </aside>
+</div>
+
+<div *ngIf="!isLoading && quote" class="content-grid" style="margin-top: 1.5rem;">
+  <section class="panel">
+    <div class="panel__header">
+      <h2>Coverage</h2>
+    </div>
+
+    <ul class="detail-list">
+      <li><span>Coverage Type</span><strong>{{ quote.coverageType ?? '—' }}</strong></li>
+      <li><span>Coverage Percentage</span><strong>{{ quote.coveragePercentage ?? '—' }}%</strong></li>
+      <li><span>Sum Insured</span><strong>{{ quote.sumInsured ?? quote.coverAmount ?? '—' }}</strong></li>
+      <li><span>Coverage Period</span><strong>{{ quote.coveragePeriodYears ?? '—' }} years</strong></li>
+      <li><span>Renewal Period</span><strong>{{ quote.renewalPeriodMonths ?? '—' }} months</strong></li>
+    </ul>
+  </section>
+
+  <section class="panel">
+    <div class="panel__header">
+      <h2>Premium</h2>
+    </div>
+
+    <ul class="detail-list">
+      <li><span>Premium Rate</span><strong>{{ quote.premiumRate ?? '—' }}</strong></li>
+      <li><span>Base Premium</span><strong>{{ quote.basePremium ?? '—' }}</strong></li>
+      <li><span>Annual Premium</span><strong>{{ quote.annualPremium ?? quote.premium ?? '—' }}</strong></li>
+      <li><span>Total Premium</span><strong>{{ quote.totalPremium ?? quote.premium ?? '—' }}</strong></li>
+    </ul>
+  </section>
+</div>
+
+<div *ngIf="!isLoading && quote" class="content-grid" style="margin-top: 1.5rem;">
+  <section class="panel">
+    <div class="panel__header">
+      <h2>Risk</h2>
+    </div>
+
+    <ul class="detail-list">
+      <li><span>Risk Score</span><strong>{{ quote.riskScore ?? '—' }}</strong></li>
+      <li><span>Risk Category</span><strong>{{ quote.riskCategory ?? '—' }}</strong></li>
+    </ul>
+  </section>
+
+  <section class="panel">
+    <div class="panel__header">
+      <h2>Deductible</h2>
+    </div>
+
+    <ul class="detail-list">
+      <li><span>Deductible Percentage</span><strong>{{ quote.deductiblePercentage ?? '—' }}%</strong></li>
+    </ul>
+  </section>
+</div>
+
+<div *ngIf="!isLoading && quote && quote.addons && quote.addons.length > 0" class="panel" style="margin-top: 1.5rem;">
+  <div class="panel__header">
+    <h2>Add-ons</h2>
+  </div>
+
+  <ul class="detail-list">
+    <li *ngFor="let addon of quote.addons">
+      <span>{{ addon.name }}</span>
+      <strong>{{ addon.price ?? '—' }}</strong>
+    </li>
+  </ul>
+</div>

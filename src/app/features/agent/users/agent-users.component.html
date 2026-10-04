@@ -1,0 +1,73 @@
+<section class="page-header">
+  <div>
+    <span class="eyebrow">Agent workflow</span>
+    <h1>Registered users</h1>
+  </div>
+  <button type="button" class="primary-button" [routerLink]="['/agent/customers']">View customers</button>
+</section>
+
+<div class="panel">
+  <div class="field-group" style="max-width: 420px;">
+    <label for="userSearch">Search users</label>
+    <input id="userSearch" type="search" [(ngModel)]="searchTerm" placeholder="Search by name, email or phone" />
+  </div>
+</div>
+
+<br>
+
+<div *ngIf="isLoading" class="panel panel--compact">
+  <div class="loading-state">Loading users...</div>
+</div>
+
+<div *ngIf="!isLoading && errorMessage" class="panel panel--compact">
+  <div class="error-state">{{ errorMessage }}</div>
+</div>
+
+<div *ngIf="!isLoading && !errorMessage && filteredUsers.length === 0" class="panel panel--compact">
+  <div class="empty-state">
+    <p>No users found.</p>
+  </div>
+</div>
+
+<div *ngIf="!isLoading && filteredUsers.length > 0" class="panel table-panel">
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Status</th>
+          <th>Role</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of filteredUsers; trackBy: trackUser">
+          <td>{{ getUserDisplayName(user) }}</td>
+          <td>{{ user.email || '—' }}</td>
+          <td>{{ user.phoneNumber || '—' }}</td>
+          <td>
+            <span class="status-badge" [class.status-badge--success]="(user.status || user.accountStatus || 'Active').toLowerCase() === 'active' || (user.status || user.accountStatus || '').toLowerCase() === 'customer'">
+              {{ user.status || user.accountStatus || 'Active' }}
+            </span>
+          </td>
+          <td>{{ user.role?.[1] || 'User' }}</td>
+          <td>
+            <div class="inline-actions">
+              <button type="button" class="secondary-button" (click)="openUser(user)">View</button>
+              <button
+                *ngIf="!isCustomerUser(user)"
+                type="button"
+                class="primary-button"
+                (click)="convertToCustomer(user)"
+              >
+                Convert to Customer
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

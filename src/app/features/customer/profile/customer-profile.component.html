@@ -1,0 +1,19 @@
+<section class="page-header">
+  <div>
+    <span class="eyebrow">Profile</span>
+    <h1>Customer profile</h1>
+  </div>
+</section>
+
+<div class="panel">
+  <div class="panel__header">
+    <h2>Personal details</h2>
+  </div>
+
+  <ul class="detail-list">
+    <li><span>Full name</span><strong>{{ currentUser?.fullName ?? '—' }}</strong></li>
+    <li><span>Email</span><strong>{{ currentUser?.email ?? '—' }}</strong></li>
+    <li><span>Role</span><strong>{{ currentUser?.role ?? 'Customer' }}</strong></li>
+    <li><span>User ID</span><strong>{{ currentUser?.id ?? '—' }}</strong></li>
+  </ul>
+</div>

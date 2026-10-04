@@ -1,0 +1,55 @@
+<section class="page-header">
+  <div>
+    <span class="eyebrow">Customer</span>
+    <h1>My quotes</h1>
+  </div>
+</section>
+
+<div *ngIf="isLoading" class="panel panel--compact">
+  <div class="loading-state">Loading quotation requests...</div>
+</div>
+
+<div *ngIf="!isLoading && errorMessage" class="panel panel--compact">
+  <div class="error-state">{{ errorMessage }}</div>
+</div>
+
+<div *ngIf="!isLoading && !errorMessage" class="panel">
+  <div *ngIf="requests.length === 0" class="empty-state">
+    <p>No quotation requests yet.</p>
+  </div>
+
+  <div *ngIf="requests.length > 0" class="table-wrapper">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Request ID</th>
+          <th>Property</th>
+          <th>Requested Coverage</th>
+          <th>Requested Premium</th>
+          <th>Requested Period</th>
+          <th>Status</th>
+          <th>Requested Date</th>
+          <th>Quotes</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let request of requests">
+          <td>#{{ request.id ?? request.quoteRequestId ?? '—' }}</td>
+          <td>{{ request.assetName ?? request.propertyName ?? '—' }}</td>
+          <td>{{ request.requestedCoverage ?? '—' }}</td>
+          <td>{{ request.requestedPremium ?? '—' }}</td>
+          <td>{{ request.requestedPeriodYears ?? '—' }} yrs</td>
+          <td>
+            <span class="status-badge status-badge--{{ getStatusTone(request.status) }}">{{ getStatusLabel(request.status) }}</span>
+          </td>
+          <td>{{ request.requestedAt || request.createdAt || request.requestedDate || '—' }}</td>
+          <td>{{ getQuoteCount(request) }}</td>
+          <td>
+            <button type="button" class="secondary-button" [routerLink]="['/customer/quotes', request.id ?? request.quoteRequestId]">View Quotes</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

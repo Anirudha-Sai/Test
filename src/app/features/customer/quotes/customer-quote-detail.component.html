@@ -1,0 +1,66 @@
+<section class="page-header">
+  <div>
+    <span class="eyebrow">Quotation request</span>
+    <h1>Request #{{ request?.id ?? request?.quoteRequestId ?? '—' }}</h1>
+  </div>
+  <div class="inline-actions">
+    <button type="button" class="secondary-button" [routerLink]="['/customer/quotes']">Back to requests</button>
+  </div>
+</section>
+
+<div *ngIf="isLoading" class="panel panel--compact">
+  <div class="loading-state">Loading quotations...</div>
+</div>
+
+<div *ngIf="!isLoading && errorMessage" class="panel panel--compact">
+  <div class="error-state">{{ errorMessage }}</div>
+</div>
+
+<div *ngIf="request && !isLoading" class="panel" style="margin-bottom:1.5rem;">
+  <div class="panel__header">
+    <h2>Request information</h2>
+  </div>
+
+  <ul class="detail-list">
+    <li><span>Requested Coverage</span><strong>{{ request.requestedCoverage ?? '—' }}</strong></li>
+    <li><span>Requested Premium</span><strong>{{ request.requestedPremium ?? '—' }}</strong></li>
+    <li><span>Requested Period</span><strong>{{ request.requestedPeriodYears ?? '—' }} years</strong></li>
+    <li><span>Status</span><strong><span class="status-badge status-badge--{{ getStatusTone(request.status) }}">{{ getStatusLabel(request.status) }}</span></strong></li>
+    <li><span>Requested Date</span><strong>{{ request.requestedAt || request.createdAt || request.requestedDate || '—' }}</strong></li>
+  </ul>
+</div>
+
+<div *ngIf="request && !isLoading" class="panel">
+  <div class="panel__header">
+    <h2>Available quotes</h2>
+    <button type="button" class="secondary-button" [routerLink]="['/customer/quotes', request.id ?? request.quoteRequestId, 'compare']">Compare options</button>
+  </div>
+
+  <div *ngIf="quotes.length === 0" class="empty-state">
+    <p>No quotations are currently available for this request.</p>
+  </div>
+
+  <div *ngIf="quotes.length > 0" class="quote-grid">
+    <article *ngFor="let quote of quotes" class="quote-card">
+      <div class="quote-card__header">
+        <h3>{{ quote.referenceNumber ?? quote.quoteReference ?? quote.id ?? 'Quote' }}</h3>
+        <span class="status-badge status-badge--{{ getStatusTone(quote.status) }}">{{ getStatusLabel(quote.status) }}</span>
+      </div>
+
+      <ul class="detail-list">
+        <li><span>Coverage Type</span><strong>{{ quote.coverageType ?? '—' }}</strong></li>
+        <li><span>Sum Insured</span><strong>{{ quote.sumInsured ?? '—' }}</strong></li>
+        <li><span>Annual Premium</span><strong>{{ quote.annualPremium ?? quote.premium ?? '—' }}</strong></li>
+        <li><span>Term</span><strong>{{ quote.coveragePeriodYears ?? '—' }} years</strong></li>
+        <li><span>Deductible</span><strong>{{ quote.deductiblePercentage ?? '—' }}%</strong></li>
+        <li><span>Risk Category</span><strong>{{ quote.riskCategory ?? '—' }}</strong></li>
+      </ul>
+
+      <div class="stacked-actions">
+        <button type="button" class="secondary-button" [routerLink]="['/customer/quotes', request.id ?? request.quoteRequestId, 'compare']">Compare</button>
+        <button *ngIf="canSelectQuote(quote)" type="button" class="primary-button" (click)="selectQuote(quote)">Select Quote</button>
+        <span *ngIf="!canSelectQuote(quote)" class="muted-label">{{ getStatusLabel(quote.status) }}</span>
+      </div>
+    </article>
+  </div>
+</div>

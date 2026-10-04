@@ -1,0 +1,40 @@
+<section class="auth-shell">
+  <div class="auth-card auth-card--narrow">
+    <div class="auth-card__header">
+      <span class="eyebrow">Insurance portal</span>
+      <h1>Welcome back</h1>
+      <p>Sign in to manage policies, quotes, and customer workflows.</p>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      <div class="field-group">
+        <label for="email">Email</label>
+        <input id="email" type="email" formControlName="email" placeholder="name@example.com" />
+        <small class="error-text" *ngIf="form.controls.email.touched && form.controls.email.invalid">
+          Enter a valid email address.
+        </small>
+      </div>
+
+      <div class="field-group">
+        <label for="password">Password</label>
+        <input id="password" type="password" formControlName="password" placeholder="Enter your password" />
+        <small class="error-text" *ngIf="form.controls.password.touched && form.controls.password.invalid">
+          Password is required.
+        </small>
+      </div>
+
+      <div class="alert alert--error" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+      <button type="submit" class="primary-button" [disabled]="submitting">
+        {{ submitting ? 'Signing in...' : 'Sign in' }}
+      </button>
+    </form>
+
+    <div class="auth-card__footer">
+      <span>Need an account?</span>
+      <a routerLink="/register">Create one</a>
+    </div>
+  </div>
+</section>

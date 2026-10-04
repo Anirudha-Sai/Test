@@ -1,0 +1,51 @@
+<section class="page-header">
+  <div>
+    <span class="eyebrow">Approval queue</span>
+    <h1>Awaiting approval</h1>
+  </div>
+</section>
+
+<div *ngIf="isLoading" class="panel panel--compact">
+  <div class="loading-state">Loading approval queue...</div>
+</div>
+
+<div *ngIf="!isLoading && errorMessage" class="panel panel--compact">
+  <div class="error-state">{{ errorMessage }}</div>
+</div>
+
+<div *ngIf="!isLoading && !errorMessage" class="panel">
+  <div *ngIf="quotes.length === 0" class="empty-state">
+    <p>No quotes are currently awaiting customer selection or approval.</p>
+  </div>
+
+  <div *ngIf="quotes.length > 0" class="table-wrapper">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Reference</th>
+          <th>Request ID</th>
+          <th>Annual Premium</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let quote of quotes">
+          <td>{{ quote.referenceNumber ?? quote.quoteReference ?? quote.id ?? '—' }}</td>
+          <td>#{{ quote.quoteRequestId ?? quote.requestId ?? '—' }}</td>
+          <td>{{ quote.annualPremium ?? quote.premium ?? '—' }}</td>
+          <td>
+            <span class="status-badge status-badge--{{ getStatusTone(quote.status) }}">{{ getStatusLabel(quote.status) }}</span>
+          </td>
+          <td>
+            <div class="inline-actions compact-actions">
+              <button type="button" class="secondary-button" [routerLink]="['/underwriter/quotes', quote.id]">View</button>
+              <button type="button" class="primary-button" (click)="approveQuote(quote)">Approve</button>
+              <button type="button" class="secondary-button" (click)="rejectQuote(quote)">Reject</button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

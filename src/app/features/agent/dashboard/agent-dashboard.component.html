@@ -1,0 +1,33 @@
+<section class="page-header">
+  <div>
+    <span class="eyebrow">Operations dashboard</span>
+    <h1>Agent overview</h1>
+  </div>
+</section>
+
+<div class="stats-grid stats-grid--wide">
+  <article class="metric-card" *ngFor="let stat of stats">
+    <span class="metric-card__label">{{ stat.label }}</span>
+    <strong class="metric-card__value metric-card__value--{{ stat.tone }}">{{ stat.value }}</strong>
+  </article>
+</div>
+
+<div class="content-grid">
+  <section class="panel">
+    <div class="panel__header">
+      <h2>Recent activity</h2>
+    </div>
+    <ul class="activity-list">
+      <li *ngFor="let item of recentActivity">{{ item }}</li>
+    </ul>
+  </section>
+
+  <aside class="panel panel--compact">
+    <div class="panel__header">
+      <h2>Agent queue</h2>
+    </div>
+    <div class="empty-state">
+      <p>No queue items are available yet.</p>
+    </div>
+  </aside>
+</div>

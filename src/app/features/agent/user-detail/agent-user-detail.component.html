@@ -1,0 +1,49 @@
+<section class="page-header">
+  <div>
+    <span class="eyebrow">User profile</span>
+    <h1>{{ fullName }}</h1>
+  </div>
+  <div class="inline-actions">
+    <button type="button" class="secondary-button" [routerLink]="['/agent/users']">Back to users</button>
+    <button *ngIf="!isCustomerUser()" type="button" class="primary-button" (click)="convertToCustomer()">Convert to Customer</button>
+  </div>
+</section>
+
+<div *ngIf="isLoading" class="panel panel--compact">
+  <div class="loading-state">Loading user details...</div>
+</div>
+
+<div *ngIf="!isLoading && errorMessage" class="panel panel--compact">
+  <div class="error-state">{{ errorMessage }}</div>
+</div>
+
+<div *ngIf="!isLoading && user" class="content-grid">
+  <div class="panel">
+    <div class="panel__header">
+      <h2>Account details</h2>
+    </div>
+
+    <ul class="detail-list">
+      <li><span>First Name</span><strong>{{ user.firstName || '—' }}</strong></li>
+      <li><span>Last Name</span><strong>{{ user.lastName || '—' }}</strong></li>
+      <li><span>Full Name</span><strong>{{ fullName }}</strong></li>
+      <li><span>Email</span><strong>{{ user.email || '—' }}</strong></li>
+      <li><span>Phone</span><strong>{{ user.phoneNumber || '—' }}</strong></li>
+      <li><span>Role</span><strong>{{ user.role?.[1] || 'User' }}</strong></li>
+      <li><span>Account status</span><strong>{{ user.status || user.accountStatus || 'Active' }}</strong></li>
+    </ul>
+  </div>
+
+  <div class="panel">
+    <div class="panel__header">
+      <h2>Agent actions</h2>
+    </div>
+
+    <div class="stacked-actions">
+      <button type="button" class="primary-button" *ngIf="!isCustomerUser()" (click)="convertToCustomer()">
+        Convert to Customer
+      </button>
+      <button type="button" class="secondary-button" [routerLink]="['/agent/customers']">Open customer list</button>
+    </div>
+  </div>
+</div>

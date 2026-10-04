@@ -1,0 +1,33 @@
+<section class="page-header">
+  <div>
+    <span class="eyebrow">Selected quotation</span>
+    <h1>Quotation selected</h1>
+  </div>
+  <div class="inline-actions">
+    <button type="button" class="secondary-button" [routerLink]="['/customer/quotes']">Back to quotes</button>
+  </div>
+</section>
+
+<div *ngIf="isLoading" class="panel panel--compact">
+  <div class="loading-state">Loading selected quotation...</div>
+</div>
+
+<div *ngIf="!isLoading && errorMessage" class="panel panel--compact">
+  <div class="error-state">{{ errorMessage }}</div>
+</div>
+
+<div *ngIf="!isLoading && quote" class="panel">
+  <div class="success-banner">
+    <h2>{{ getConfirmationMessage() }}</h2>
+  </div>
+
+  <ul class="detail-list">
+    <li><span>Quote reference</span><strong>{{ quote.referenceNumber ?? quote.quoteReference ?? quote.id ?? '—' }}</strong></li>
+    <li><span>Coverage</span><strong>{{ quote.coverageType ?? '—' }}</strong></li>
+    <li><span>Sum insured</span><strong>{{ quote.sumInsured ?? '—' }}</strong></li>
+    <li><span>Annual premium</span><strong>{{ quote.annualPremium ?? quote.premium ?? '—' }}</strong></li>
+    <li><span>Term</span><strong>{{ quote.coveragePeriodYears ?? '—' }} years</strong></li>
+    <li><span>Deductible</span><strong>{{ quote.deductiblePercentage ?? '—' }}%</strong></li>
+    <li><span>Risk category</span><strong>{{ quote.riskCategory ?? '—' }}</strong></li>
+  </ul>
+</div>

@@ -1,0 +1,63 @@
+<section class="page-header">
+  <div>
+    <span class="eyebrow">Customer assets</span>
+    <h1>Assets</h1>
+  </div>
+  <div class="inline-actions">
+    <button type="button" class="secondary-button" [routerLink]="['/agent/customers']">Back to customers</button>
+    <button *ngIf="customerId" type="button" class="primary-button" [routerLink]="['/agent/customers', customerId, 'assets', 'new']">Add Asset</button>
+  </div>
+</section>
+
+<div *ngIf="isLoading" class="panel panel--compact">
+  <div class="loading-state">Loading assets...</div>
+</div>
+
+<div *ngIf="!isLoading && errorMessage" class="panel panel--compact">
+  <div class="error-state">{{ errorMessage }}</div>
+</div>
+
+<div *ngIf="!isLoading && !errorMessage && assets.length === 0" class="panel panel--compact">
+  <div class="empty-state">
+    <p>No assets found for this customer.</p>
+  </div>
+</div>
+
+<div *ngIf="!isLoading && assets.length > 0" class="panel table-panel">
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Asset name</th>
+          <th>Asset type</th>
+          <th>Market value</th>
+          <th>Replacement value</th>
+          <th>Created date</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let asset of assets; trackBy: trackAsset">
+          <td>{{ getAssetName(asset) }}</td>
+          <td>{{ getAssetTypeLabel(asset) }}</td>
+          <td>{{ asset.marketValue ?? '—' }}</td>
+          <td>{{ asset.replacementValue ?? '—' }}</td>
+          <td>{{ asset.createdAt || '—' }}</td>
+          <td>
+            <span class="status-badge" [class.status-badge--success]="(asset.status || '').toString().toLowerCase() === 'active'">
+              {{ asset.status || 'Active' }}
+            </span>
+          </td>
+          <td>
+            <div class="inline-actions">
+              <button type="button" class="secondary-button" (click)="openAsset(asset)">View</button>
+              <button type="button" class="secondary-button" (click)="editAsset(asset)">Edit</button>
+              <button type="button" class="secondary-button danger-button" (click)="deleteAsset(asset)">Delete</button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,62 @@
+<section class="page-header">
+  <div>
+    <span class="eyebrow">Customer portfolio</span>
+    <h1>Customers</h1>
+  </div>
+  <button type="button" class="secondary-button" [routerLink]="['/agent/users']">Back to users</button>
+</section>
+
+<div class="panel">
+  <div class="field-group" style="max-width: 420px;">
+    <label for="customerSearch">Search customers</label>
+    <input id="customerSearch" type="search" [(ngModel)]="searchTerm" placeholder="Search by customer or ID" />
+  </div>
+</div>
+
+<br>
+
+<div *ngIf="isLoading" class="panel panel--compact">
+  <div class="loading-state">Loading customers...</div>
+</div>
+
+<div *ngIf="!isLoading && errorMessage" class="panel panel--compact">
+  <div class="error-state">{{ errorMessage }}</div>
+</div>
+
+<div *ngIf="!isLoading && !errorMessage && filteredCustomers.length === 0" class="panel panel--compact">
+  <div class="empty-state">
+    <p>No customers found.</p>
+  </div>
+</div>
+
+<div *ngIf="!isLoading && filteredCustomers.length > 0" class="panel table-panel">
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Customer ID</th>
+          <th>User</th>
+          <th>Customer Since</th>
+          <th>Number of Policies</th>
+          <th>Number of Properties</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let customer of filteredCustomers; trackBy: trackCustomer">
+          <td>{{ customer.customerId ?? '—' }}</td>
+          <td>{{ getCustomerUserName(customer) }}</td>
+          <td>{{ getCustomerSince(customer) }}</td>
+          <td>{{ customer.numberOfPolicies ?? customer.policyCount ?? 0 }}</td>
+          <td>{{ customer.numberOfProperties ?? customer.propertyCount ?? 0 }}</td>
+          <td>
+            <div class="inline-actions">
+              <button type="button" class="secondary-button" (click)="openCustomer(customer)">View</button>
+              <button type="button" class="primary-button" (click)="openCustomerAssets(customer)">Assets</button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

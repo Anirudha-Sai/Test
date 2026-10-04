@@ -1,0 +1,104 @@
+<section class="page-header">
+  <div>
+    <span class="eyebrow">Quotes</span>
+    <h1>{{ request ? 'Generated quotes for request' : 'Generated quotes' }}</h1>
+  </div>
+  <div class="inline-actions" *ngIf="request">
+    <button type="button" class="secondary-button" [routerLink]="['/underwriter/requests', request.id ?? request.quoteRequestId]">Back to request</button>
+  </div>
+</section>
+
+<div *ngIf="isLoading" class="panel panel--compact">
+  <div class="loading-state">Loading generated quotes...</div>
+</div>
+
+<div *ngIf="!isLoading && errorMessage" class="panel panel--compact">
+  <div class="error-state">{{ errorMessage }}</div>
+</div>
+
+<div *ngIf="request && !isLoading && !errorMessage" class="panel" style="margin-bottom: 1.5rem;">
+  <div class="panel__header">
+    <h2>Generate quotation options</h2>
+  </div>
+
+  <div class="quote-option-grid">
+    <article *ngFor="let option of optionDrafts; let index = index" class="quote-option-card">
+      <h3>Option {{ index + 1 }}</h3>
+      <div class="field-grid">
+        <div class="field-group">
+          <label>Coverage Type</label>
+          <input type="text" [(ngModel)]="option.coverageType" />
+        </div>
+        <div class="field-group">
+          <label>Sum Insured</label>
+          <input type="number" min="0" step="1000" [(ngModel)]="option.sumInsured" />
+        </div>
+        <div class="field-group">
+          <label>Annual Premium</label>
+          <input type="number" min="0" step="100" [(ngModel)]="option.annualPremium" />
+        </div>
+        <div class="field-group">
+          <label>Coverage Period (Years)</label>
+          <input type="number" min="1" step="1" [(ngModel)]="option.coveragePeriodYears" />
+        </div>
+        <div class="field-group">
+          <label>Renewal Period (Months)</label>
+          <input type="number" min="1" step="1" [(ngModel)]="option.renewalPeriodMonths" />
+        </div>
+        <div class="field-group">
+          <label>Deductible %</label>
+          <input type="number" min="0" step="0.1" [(ngModel)]="option.deductiblePercentage" />
+        </div>
+      </div>
+    </article>
+  </div>
+
+  <div class="inline-actions" style="margin-top: 1rem;">
+    <button type="button" class="primary-button" (click)="generateOptions()" [disabled]="isGenerating">
+      {{ isGenerating ? 'Generating...' : 'Generate quotation options' }}
+    </button>
+  </div>
+</div>
+
+<div *ngIf="!isLoading && !errorMessage" class="panel">
+  <div class="panel__header">
+    <h2>{{ request ? 'Request quotes' : 'All quotes' }}</h2>
+  </div>
+
+  <div *ngIf="quotes.length === 0" class="empty-state">
+    <p>No generated quotes are available.</p>
+  </div>
+
+  <div *ngIf="quotes.length > 0" class="table-wrapper">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Quote Ref</th>
+          <th>Request ID</th>
+          <th>Coverage</th>
+          <th>Sum Insured</th>
+          <th>Annual Premium</th>
+          <th>Risk Category</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let quote of quotes">
+          <td>{{ quote.referenceNumber ?? quote.quoteReference ?? quote.id ?? '—' }}</td>
+          <td>#{{ quote.quoteRequestId ??'—' }}</td>
+          <td>{{ quote.coverageType ?? '—' }}</td>
+          <td>{{ quote.sumInsured ?? '—' }}</td>
+          <td>{{ quote.annualPremium ?? quote.premium ?? '—' }}</td>
+          <td>{{ quote.riskCategory ?? '—' }}</td>
+          <td>
+            <span class="status-badge status-badge--{{ getStatusTone(quote.status) }}">{{ getStatusLabel(quote.status) }}</span>
+          </td>
+          <td>
+            <button type="button" class="secondary-button" [routerLink]="['/underwriter/quotes', quote.quoteRequestId]">View</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

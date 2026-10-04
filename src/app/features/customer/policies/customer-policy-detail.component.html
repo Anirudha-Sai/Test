@@ -1,0 +1,38 @@
+<section class="page-header">
+  <div>
+    <span class="eyebrow">Policy</span>
+    <h1>{{ policy?.policyNumber ?? 'Policy details' }}</h1>
+  </div>
+  <div class="inline-actions">
+    <button type="button" class="secondary-button" [routerLink]="['/customer/policies']">Back to policies</button>
+  </div>
+</section>
+
+<div *ngIf="isLoading" class="panel panel--compact">
+  <div class="loading-state">Loading policy details...</div>
+</div>
+
+<div *ngIf="!isLoading && errorMessage" class="panel panel--compact">
+  <div class="error-state">{{ errorMessage }}</div>
+</div>
+
+<div *ngIf="!isLoading && policy" class="panel">
+  <ul class="detail-list">
+    <li><span>Policy Number</span><strong>{{ policy.policyNumber ?? '—' }}</strong></li>
+    <li><span>Status</span><strong>{{ policy.status ?? '—' }}</strong></li>
+    <li><span>Premium</span><strong>{{ policy.premium ?? policy.annualPremium ?? '—' }}</strong></li>
+    <li><span>Sum Insured</span><strong>{{ policy.sumInsured ?? policy.coverAmount ?? '—' }}</strong></li>
+    <li><span>Effective Date</span><strong>{{ policy.effectiveDate ?? policy.startDate ?? '—' }}</strong></li>
+    <li><span>Expiry Date</span><strong>{{ policy.expiryDate ?? policy.endDate ?? '—' }}</strong></li>
+  </ul>
+
+  <div *ngIf="policy.addOns?.length" class="panel__header" style="margin-top:1.5rem;">
+    <h2>Optional add-ons</h2>
+  </div>
+  <ul *ngIf="policy.addOns?.length" class="detail-list">
+    <li *ngFor="let addOn of policy.addOns">
+      <span>{{ addOn.name ?? 'Add-on' }}</span>
+      <strong>{{ addOn.price ?? '—' }}</strong>
+    </li>
+  </ul>
+</div>

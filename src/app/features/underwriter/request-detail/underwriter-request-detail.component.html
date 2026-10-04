@@ -1,0 +1,65 @@
+<section class="page-header">
+  <div>
+    <span class="eyebrow">Request detail</span>
+    <h1>{{ getRequestTitle() }}</h1>
+  </div>
+  <div class="inline-actions">
+    <button type="button" class="secondary-button" [routerLink]="['/underwriter/requests']">Back to requests</button>
+  </div>
+</section>
+
+<div *ngIf="isLoading" class="panel panel--compact">
+  <div class="loading-state">Loading request details...</div>
+</div>
+
+<div *ngIf="!isLoading && errorMessage" class="panel panel--compact">
+  <div class="error-state">{{ errorMessage }}</div>
+</div>
+
+<div *ngIf="!isLoading && request" class="content-grid">
+  <section class="panel">
+    <div class="panel__header">
+      <h2>Request information</h2>
+    </div>
+
+    <ul class="detail-list">
+      <li><span>Request ID</span><strong>#{{ request.id ?? request.quoteRequestId ?? '—' }}</strong></li>
+      <li><span>Property ID</span><strong>{{ request.propertyId ?? '—' }}</strong></li>
+      <li><span>Requested By</span><strong>{{ request.requestedBy ?? request.customerName ?? '—' }}</strong></li>
+      <li><span>Requested Coverage</span><strong>{{ request.requestedCoverage ?? '—' }}</strong></li>
+      <li><span>Requested Premium</span><strong>{{ request.requestedPremium ?? '—' }}</strong></li>
+      <li><span>Requested Period</span><strong>{{ request.requestedPeriodYears ?? '—' }} years</strong></li>
+      <li><span>Remarks</span><strong>{{ request.remarks || '—' }}</strong></li>
+      <li><span>Requested Date</span><strong>{{ request.requestedAt || request.createdAt || request.requestedDate || '—' }}</strong></li>
+      <li><span>Status</span><strong><span class="status-badge status-badge--{{ getStatusTone(request.status) }}">{{ getStatusLabel(request.status) }}</span></strong></li>
+    </ul>
+  </section>
+
+  <aside class="panel">
+    <div class="panel__header">
+      <h2>Actions</h2>
+    </div>
+
+    <div class="stacked-actions">
+      <button type="button" class="primary-button" (click)="viewRiskAssessment()">Perform Risk Assessment</button>
+      <button type="button" class="secondary-button" (click)="viewQuotes()">View Quotes</button>
+    </div>
+  </aside>
+</div>
+
+<div *ngIf="!isLoading && request" class="panel" style="margin-top: 1.5rem;">
+  <div class="panel__header">
+    <h2>Related property / asset</h2>
+  </div>
+
+  <div *ngIf="!(request.assetName || request.propertyName || request.propertyId || request.assetId)" class="empty-state">
+    <p>No related property or asset information was returned by the API.</p>
+  </div>
+
+  <ul *ngIf="request.assetName || request.propertyName || request.propertyId || request.assetId" class="detail-list">
+    <li><span>Asset Name</span><strong>{{ asset?.assetName || '—' }}</strong></li>
+    <!-- <li><span>Property Name</span><strong>{{ asset?.propertyName || '—' }}</strong></li> -->
+    <li><span>Asset ID</span><strong>{{ asset?.assetId ?? '—' }}</strong></li>
+    <li><span>Property ID</span><strong>{{ request.propertyId ?? '—' }}</strong></li>
+  </ul>
+</div>
